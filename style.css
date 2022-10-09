@@ -1,0 +1,42 @@
+html,
+body{
+    height: auto;
+    margin: 0;
+}
+
+body{
+    text-align: center;
+    display: grid;
+    gap: 5px;
+    justify-items: center;
+}
+
+.tile{
+    width: 25px;
+    height: 25px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+
+#playerBoard{
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+    height: 272px;
+    width: 272px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+
+#computerBoard{
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+    height: 272px;
+    width: 272px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
