@@ -42,11 +42,25 @@ for(let i = 0; i < computerBoard.board.length; i++){
 //boards created. Now we will handle placing the boats on the board.
 
 let carrier = player.playerShips[0];
-console.log(carrier.length);
+
+let currAxis = true;
+let axisBtn = document.getElementById("axis");
+
+axisBtn.addEventListener("click", ()=>{
+    if(currAxis){
+        currAxis = false;
+        axisBtn.innerHTML = "Y-Axis";
+    } else {
+        currAxis = true;
+        axisBtn.innerHTML = "X-Axis";
+    }
+})
+
 
 let tiles = document.querySelectorAll('.tile');
 tiles.forEach(tile =>{
     tile.addEventListener("mouseenter", () =>{
+        if(currAxis){ ///FIX INDENTIONS HERE
         tile.style.backgroundColor = "yellow";
         let headTile = tile;
         let getX = headTile.getAttribute("x");
@@ -54,7 +68,7 @@ tiles.forEach(tile =>{
         let tailX = 0;
         tailX = parseInt(getX) + carrier.length;
         let isSpace = true;
-        console.log(tailX);
+        
         if(tailX < 11){
             isSpace = true;
         } else {
@@ -75,9 +89,32 @@ tiles.forEach(tile =>{
                 
             }
         }
+    } else {
+        tile.style.backgroundColor = "yellow";
+        let headTile = tile;
+        let getX = headTile.getAttribute('x');
+        let getY = parseInt(headTile.getAttribute('y'));
+        let tail = getY + carrier.length;
+        let isSpace = true;
+        if(tail < 10){
+            isSpace = true;
+        } else {
+            isSpace = false;
+        }
+        if(isSpace){
+            let currXrow = document.querySelectorAll("li['x' = " + getX + "]");
+            currXrow.forEach( row => {
+                if(parseInt(row.getAttribute('y')) > getY && parseInt(row.getAttribute('y')) < 10){
+                    
+                }
+            })
+        }
+        
+    }
         
     })
     tile.addEventListener("mouseleave", () =>{
+        if(currAxis){//FIX INDENTIONS HERE
         tile.style.backgroundColor = "aqua";
         let headTile = tile;
         let getX = headTile.getAttribute("x");
@@ -85,7 +122,7 @@ tiles.forEach(tile =>{
         let tailX = 0;
         tailX = parseInt(getX) + carrier.length;
         let isSpace = true;
-        console.log(tailX);
+        
         if(tailX < 10){
             isSpace = true;
         } else {
@@ -101,7 +138,7 @@ tiles.forEach(tile =>{
             }
             
         }
-       
+    }
     })
 })
 
