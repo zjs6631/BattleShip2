@@ -35,4 +35,14 @@ Simply converting to import/export statements throughout the application seemed 
 
 SHIFT + ALT + F to auto indent code.
 
+10/9/2022 11:01PM notes for tomorrow:
+I was able to get the tile color changes to function. AND they now turn red when there is not enough alloted space. I will have to look into using some form of loop to control the length being used to figure out how many squares to color.
+
+First I need to add a click event listener where if headTiles color == "yellow" then I
+can allow the player to place a ship
+
+This will cause more issue with making sure players place ships in valid positions/no overlapping and such. 
+
+once I get the ships placed on the board I will start figuring out how to let the computer place ships on the board randomly. Maybe get a random number (0-1) to determine axis and then a random number (0-9) to choose tile to place ship. Repeat this process until 5 ships are places. 
+
 
