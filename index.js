@@ -105,14 +105,14 @@ tiles.forEach((tile) => {
       }
     } else {
       //HANDLES Y AXIS
-      
+
       let headTile = tile;
       let getX = headTile.getAttribute("x");
       let getY = parseInt(headTile.getAttribute("y"));
-      let tail = getY + carrier.length;
+      let tail = getY + carrier.length - 1;
       let isSpace = true;
       let validMove = null;
-      if (tail < 11) {
+      if (tail < 10) {
         isSpace = true;
       } else {
         isSpace = false;
@@ -126,30 +126,40 @@ tiles.forEach((tile) => {
         let allValid = true;
         currXrow.forEach((row) => {
           if (
-            parseInt(row.getAttribute("y")) > getY &&
-            parseInt(row.getAttribute("y")) < 10 &&
+            parseInt(row.getAttribute("y")) >= getY &&
+            parseInt(row.getAttribute("y")) <= tail &&
             row.classList.contains("tile") &&
             row.getAttribute("isActive") == "false"
           ) {
             allValid = false;
-            tile.style.backgroundColor = "red";
+            //tile.style.backgroundColor = "red";
           } else {
-            tile.style.backgroundColor = "yellow";
+            //tile.style.backgroundColor = "yellow";
           }
         });
-        
+
         //loop through node list of values
         currXrow.forEach((row) => {
           if (
             //if curr y value > heads y value && < 10 && on player board && tileColor counter < ships length color the block
-            parseInt(row.getAttribute("y")) > getY &&
+            parseInt(row.getAttribute("y")) >= getY &&
             parseInt(row.getAttribute("y")) < 10 &&
             row.classList.contains("tile") &&
-            tilesColored < carrier.length - 1 &&
+            tilesColored < carrier.length &&
             allValid == true
           ) {
             row.style.backgroundColor = "yellow";
             tilesColored += 1;
+          } else if (
+            parseInt(row.getAttribute("y")) >= getY &&
+            parseInt(row.getAttribute("y")) <= tail &&
+            row.classList.contains("tile") &&
+            tilesColored < carrier.length - 1 &&
+            allValid == false
+          ) {
+            if (row.getAttribute("isActive") == "true") {
+              row.style.backgroundColor = "red";
+            }
           }
         });
       } else {
@@ -160,7 +170,7 @@ tiles.forEach((tile) => {
         currXrow.forEach((row) => {
           let parsedY = parseInt(row.getAttribute("y"));
           if (
-            parsedY < 10 &&
+            parsedY < 11 &&
             parsedY >= getY &&
             row.classList.contains("tile") &&
             row.style.backgroundColor == "aqua"
@@ -191,7 +201,10 @@ tiles.forEach((tile) => {
         isSpace = false;
       }
       //go through previous siblings and change to aqua until an aqua block is encountered
-      if (tile.previousSibling && tile.previousSibling.getAttribute('isActive') == "true") {
+      if (
+        tile.previousSibling &&
+        tile.previousSibling.getAttribute("isActive") == "true"
+      ) {
         let prevColor = tile.previousSibling.style.backgroundColor;
         while (
           (prevColor == "yellow" || prevColor == "red") &&
@@ -233,7 +246,7 @@ tiles.forEach((tile) => {
           row.getAttribute("isActive") == "false"
         ) {
           isValid = false;
-        } 
+        }
       });
 
       currXrow.forEach((row) => {
@@ -244,7 +257,8 @@ tiles.forEach((tile) => {
           parseInt(row.getAttribute("y")) < 10 &&
           row.classList.contains("tile") &&
           tilesColored < carrier.length &&
-          (row.style.backgroundColor == "yellow" || row.style.backgroundColor == "red")
+          (row.style.backgroundColor == "yellow" ||
+            row.style.backgroundColor == "red")
         ) {
           row.style.backgroundColor = "aqua";
           tilesColored += 1;
@@ -270,6 +284,22 @@ tiles.forEach((tile) => {
         tile.nextSibling.setAttribute("isActive", "false");
         tile = tile.nextSibling; //using nextSibling is similar to node traversals
       }
+    } else if (tile.style.backgroundColor == "yellow" && !currAxis){
+      let headTile = tile;
+      let startX = headTile.getAttribute('x');
+      let startY = parseInt(headTile.getAttribute('y'));
+      let tailY = (carrier.length - 1) + startY;
+      let currXrow = document.querySelectorAll('[x ="' + startX + '"]');
+      currXrow.forEach((currTile)=>{
+        let currTileY = parseInt(currTile.getAttribute('y'))
+        if(currTileY >= startY &&
+          currTileY <= tailY &&
+          currTile.getAttribute("isActive") == "true"){
+            currTile.style.backgroundColor = "gray";
+            currTile.setAttribute("isActive", "false");
+          }
+      })
+
     }
   });
 });
