@@ -1,14 +1,44 @@
 html,
 body{
-    height: auto;
+    height: 100%;
+    width: auto;
+    overflow: hidden;
     margin: 0;
 }
 
 body{
     text-align: center;
     display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 12fr;
     gap: 5px;
     justify-items: center;
+}
+
+#title{
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+#container{
+    display: grid;
+    gap: 0px;
+    grid-column-start: 2;
+    grid-row-start: 2;
+}
+
+#axis{
+    justify-self: center;
+    height: fit-content;
+    width: fit-content;
+}
+
+#textBox{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    justify-self: end;
+    align-self: center;
 }
 
 .tile{
