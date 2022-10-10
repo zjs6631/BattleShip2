@@ -1,6 +1,7 @@
 import { ship as shipFactory } from "./Ship.js";
 import { Gameboard as gameboardFactory } from "./Gameboard.js";
 import { player as playerFactory } from "./Player.js";
+import {placeShip} from "./computerPlays.js";
 
 let player = playerFactory();
 let computer = playerFactory();
@@ -24,6 +25,7 @@ for (let i = 0; i < playerBoard.board.length; i++) {
   }
 }
 
+
 for (let i = 0; i < computerBoard.board.length; i++) {
   for (let j = 0; j < computerBoard.board[i].length; j++) {
     let tile = document.createElement("div");
@@ -33,6 +35,17 @@ for (let i = 0; i < computerBoard.board.length; i++) {
     visualCboard.appendChild(tile);
   }
 }
+
+console.log(computer.playerShips.length);
+for(let i = 0; i < computer.playerShips.length; i++){
+  while(placeShip(computerBoard, computer, i) == false){
+    placeShip(computerBoard, computer, i);
+  }
+}
+
+console.log(computerBoard.board);
+
+
 
 //boards created. Now we will handle placing the boats on the board.
 
@@ -106,12 +119,11 @@ tiles.forEach((tile) => {
           //tile.style.backgroundColor = "red";
           let counter = parseInt(getX);
           while (tile.nextSibling && counter < 9) {
-            if (tile.nextSibling.getAttribute("isActive") == "true"){ 
-            tile.nextSibling.style.backgroundColor = "red";
+            if (tile.nextSibling.getAttribute("isActive") == "true") {
+              tile.nextSibling.style.backgroundColor = "red";
             }
             tile = tile.nextSibling;
             counter += 1;
-            
           }
         }
       } else {
@@ -298,20 +310,20 @@ tiles.forEach((tile) => {
       }
       tile.style.backgroundColor = "gray"; //make current tile yellow
       tile.setAttribute("isActive", "false");
-      let firstTilesX = parseInt(tile.getAttribute('x'));
-      let firstTilesY = parseInt(tile.getAttribute('y'));
+      let firstTilesX = parseInt(tile.getAttribute("x"));
+      let firstTilesY = parseInt(tile.getAttribute("y"));
       playerBoard.board[firstTilesY][firstTilesX] = 1;
 
       //loop through for the length of the boat and make squares yellow
       for (let i = 1; i < currShipToPlace.length; i++) {
-        let nextX = parseInt(tile.nextSibling.getAttribute('x'));
-        let nextY = parseInt(tile.nextSibling.getAttribute('y'));
+        let nextX = parseInt(tile.nextSibling.getAttribute("x"));
+        let nextY = parseInt(tile.nextSibling.getAttribute("y"));
         playerBoard.board[nextY][nextX] = 1;
         tile.nextSibling.style.backgroundColor = "gray";
         tile.nextSibling.setAttribute("isActive", "false");
         tile = tile.nextSibling; //using nextSibling is similar to node traversals
       }
-      currShipIndex+=1;
+      currShipIndex += 1;
       console.log(playerBoard.board);
     } else if (
       tile.style.backgroundColor == "yellow" &&
@@ -330,18 +342,15 @@ tiles.forEach((tile) => {
           currTileY <= tailY &&
           currTile.getAttribute("isActive") == "true"
         ) {
-          let currX = parseInt(currTile.getAttribute('x'));
-          let currY = parseInt(currTile.getAttribute('y'));
+          let currX = parseInt(currTile.getAttribute("x"));
+          let currY = parseInt(currTile.getAttribute("y"));
           playerBoard.board[currY][currX] = 1;
           currTile.style.backgroundColor = "gray";
           currTile.setAttribute("isActive", "false");
-          
         }
       });
-      currShipIndex+=1;
+      currShipIndex += 1;
       console.log(playerBoard.board);
     }
-
-  
   });
 });

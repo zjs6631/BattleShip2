@@ -1,6 +1,7 @@
 import {ship as shipFactory} from "./Ship.js";
 import { Gameboard as gameboardFactory } from "./Gameboard.js";
 import {player as playerFactory} from "./Player.js";
+import {placeShip} from "./computerPlays";
 
 
 test("ship is not sunk", () => {
@@ -40,4 +41,6 @@ test("player created with 4 ships", () => {
     let newPlayer = playerFactory();
     expect(newPlayer.playerShips.length).toBe(4);
 });
+
+
 
