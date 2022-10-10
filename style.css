@@ -20,6 +20,14 @@ body{
     background-color: aqua;
 }
 
+.comptile{
+    width: 25px;
+    height: 25px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    background-color: aqua;
+}
 
 
 

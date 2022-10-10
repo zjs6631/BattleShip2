@@ -33,3 +33,6 @@ module.exports doesn't work when working in a browser environment either, so thi
 Simply converting to import/export statements throughout the application seemed to have solved my issues
 
 
+SHIFT + ALT + F to auto indent code.
+
+
