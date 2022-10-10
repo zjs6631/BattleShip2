@@ -35,10 +35,10 @@ for (let i = 0; i < computerBoard.board.length; i++) {
 
 //boards created. Now we will handle placing the boats on the board.
 
-let carrier = player.playerShips[0];
+let carrier = player.playerShips[0]; //used to test squares with ship of length 5
 
-let currAxis = true;
-let axisBtn = document.getElementById("axis");
+let currAxis = true; //currAxis true means that the button is set to X axis option
+let axisBtn = document.getElementById("axis"); //grab the button
 
 axisBtn.addEventListener("click", () => {
   if (currAxis) {
@@ -50,34 +50,39 @@ axisBtn.addEventListener("click", () => {
   }
 });
 
+
+//tiles returns a list of all of our tile divs
 let tiles = document.querySelectorAll(".tile");
-tiles.forEach((tile) => {
+tiles.forEach((tile) => { //we can then use forEach to add eventListeners to each individual div
+
   tile.addEventListener("mouseenter", () => {
     if (currAxis) {
-      ///FIX INDENTIONS HERE
-      
+      //set a headTile and pull the x and y values from that tile (keeps a starting point)
       let headTile = tile;
       let getX = headTile.getAttribute("x");
       let getY = headTile.getAttribute("y");
-      let tailX = 0;
+      let tailX = 0; //set a tailX variable to be the headtiles starting x value + length of boat
       tailX = parseInt(getX) + carrier.length;
-      let isSpace = true;
-      let validMove = null;
+      let isSpace = true; //bool to test if space for boat is available
+      let validMove = null; //validMode will control game logic
 
-      if (tailX < 11) {
+      if (tailX < 11) { //if our tail x value was greater than 10 then there is not enough room
         isSpace = true;
       } else {
         isSpace = false;
       }
-      if (isSpace) {
-        validMove = true;
-        tile.style.backgroundColor = "yellow";
+
+      if (isSpace) { //if we had enough space on the board
+        validMove = true; //valid move
+        tile.style.backgroundColor = "yellow"; //make current tile yellow
+
+        //loop through for the length of the boat and make squares yellow
         for (let i = 1; i < carrier.length; i++) {
           tile.nextSibling.style.backgroundColor = "yellow";
-          tile = tile.nextSibling;
+          tile = tile.nextSibling; //using nextSibling is similar to node traversals
         }
-      } else {
-        validMove = false;
+      } else { //IF NO SPACE
+        validMove = false; //not valid move and make squares red until we reach the maximum x value
         tile.style.backgroundColor = "red";
         let counter = parseInt(getX);
         while (tile.nextSibling && counter < 9) {
@@ -87,6 +92,7 @@ tiles.forEach((tile) => {
         }
       }
     } else {
+    //HANDLES Y AXIS
       tile.style.backgroundColor = "yellow";
       let headTile = tile;
       let getX = headTile.getAttribute("x");
@@ -100,12 +106,14 @@ tiles.forEach((tile) => {
         isSpace = false;
       }
       if (isSpace) {
+        //if we have space move is valid
         validMove = true;
         let currXrow = document.querySelectorAll('[x ="' + getX + '"]');
-
+        //using querySelectorAll to grab all elements with x value matching current tile
         let tilesColored = 0;
+        //loop through node list of values 
         currXrow.forEach((row) => {
-          if (
+          if ( //if curr y value > heads y value && < 10 && on player board && tileColor counter < ships length color the block
             parseInt(row.getAttribute("y")) > getY &&
             parseInt(row.getAttribute("y")) < 10 &&
             row.classList.contains("tile") &&
@@ -116,6 +124,7 @@ tiles.forEach((tile) => {
           }
         });
       } else {
+        //if invalid move then color the blocks red until you get to end of column
         validMove = false;
         let currXrow = document.querySelectorAll('[x ="' + getX + '"]');
 
@@ -132,9 +141,10 @@ tiles.forEach((tile) => {
       }
     }
   });
+  //MOUSELEAVE TO HANDLE COLORING BACK TO BLUE
   tile.addEventListener("mouseleave", () => {
     if (currAxis) {
-      //FIX INDENTIONS HERE
+      //for x axis
       tile.style.backgroundColor = "aqua";
       let headTile = tile;
       let getX = headTile.getAttribute("x");
@@ -148,14 +158,14 @@ tiles.forEach((tile) => {
       } else {
         isSpace = false;
       }
-
+      //go through previous siblings and change to aqua until an aqua block is encountered
       if (tile.previousSibling) {
         let prevColor = tile.previousSibling.style.backgroundColor;
         while (prevColor == "yellow" || prevColor == "red") {
           tile.previousSibling.style.backgroundColor = "aqua";
           tile = tile.previousSibling;
 
-          try {
+          try { //try catch prevents error message when cursor leaves 1st tile in grid
             prevColor = tile.previousSibling.style.backgroundColor;
           } catch (error) {
             break;
@@ -163,7 +173,7 @@ tiles.forEach((tile) => {
         }
       }
     } else {
-      
+      //for Y axis
       let headTile = tile;
       let getX = headTile.getAttribute("x");
       let getY = parseInt(headTile.getAttribute("y"));
@@ -177,8 +187,9 @@ tiles.forEach((tile) => {
       }
       let currXrow = document.querySelectorAll('[x ="' + getX + '"]');
       let tilesColored = 0;
-      currXrow.forEach((row) => {
+      currXrow.forEach((row) => { //use our forEach to get node list of divs with matching x values 
         if (
+            //if their y values are within the range and they are player tiles color them aqua
           parseInt(row.getAttribute("y")) >= getY &&
           parseInt(row.getAttribute("y")) < 10 &&
           row.classList.contains("tile") &&
