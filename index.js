@@ -1,7 +1,7 @@
 import { ship as shipFactory } from "./Ship.js";
 import { Gameboard as gameboardFactory } from "./Gameboard.js";
 import { player as playerFactory } from "./Player.js";
-import {placeShip} from "./computerPlays.js";
+import { placeShip } from "./computerPlays.js";
 
 let player = playerFactory();
 let computer = playerFactory();
@@ -25,7 +25,6 @@ for (let i = 0; i < playerBoard.board.length; i++) {
   }
 }
 
-
 for (let i = 0; i < computerBoard.board.length; i++) {
   for (let j = 0; j < computerBoard.board[i].length; j++) {
     let tile = document.createElement("div");
@@ -37,15 +36,12 @@ for (let i = 0; i < computerBoard.board.length; i++) {
 }
 
 console.log(computer.playerShips.length);
-for(let i = 0; i < computer.playerShips.length; i++){
-  while(placeShip(computerBoard, computer, i) == false){
-    placeShip(computerBoard, computer, i);
-  }
+for (let i = 0; i < computer.playerShips.length; i++) {
+  console.log("loop--->" + i);
+  placeShip(computerBoard, computer, i);
 }
 
 console.log(computerBoard.board);
-
-
 
 //boards created. Now we will handle placing the boats on the board.
 
