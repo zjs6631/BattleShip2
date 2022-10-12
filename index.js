@@ -3,6 +3,7 @@ import { Gameboard as gameboardFactory } from "./Gameboard.js";
 import { player as playerFactory } from "./Player.js";
 import { placeShip } from "./computerPlays.js";
 
+
 let player = playerFactory();
 let computer = playerFactory();
 
@@ -11,6 +12,8 @@ let computerBoard = gameboardFactory();
 
 let visualPboard = document.getElementById("playerBoard");
 let visualCboard = document.getElementById("computerBoard");
+
+let colors = ["aqua", "gray", "orange", "black"];
 // nested loop to create a 10x10 grid and assign x/y variable values to each tile to use for game logic
 //implementation
 for (let i = 0; i < playerBoard.board.length; i++) {
@@ -31,6 +34,7 @@ for (let i = 0; i < computerBoard.board.length; i++) {
     tile.classList = "comptile";
     tile.setAttribute("x", j);
     tile.setAttribute("y", i);
+    tile.setAttribute("active", "true");
     visualCboard.appendChild(tile);
   }
 }
@@ -348,5 +352,50 @@ tiles.forEach((tile) => {
       currShipIndex += 1;
       console.log(playerBoard.board);
     }
+  });
+});
+
+let comptiles = document.querySelectorAll(".comptile");
+
+comptiles.forEach((comptile)=>{
+  comptile.addEventListener("mouseenter", ()=>{
+      let x = parseInt(comptile.getAttribute("x"));
+      let y = parseInt(comptile.getAttribute("y"));
+      let colorIndex = computerBoard.board[y][x];
+      let currColor = colors[colorIndex];
+      if((currColor == "aqua" || currColor == "gray") && comptile.getAttribute("active") == "true"){
+        comptile.style.backgroundColor = "green";
+      } else {
+        comptile.style.backgroundColor = "red";
+      };
+  });
+
+  comptile.addEventListener("mouseleave", ()=>{
+    let x = parseInt(comptile.getAttribute("x"));
+    let y = parseInt(comptile.getAttribute("y"));
+    let colorIndex = computerBoard.board[y][x];
+    let currColor = colors[colorIndex];
+    if((colorIndex == 0 || colorIndex == 2 || colorIndex == 3)){
+      comptile.style.backgroundColor = currColor;
+    } else if (colorIndex == 1 && comptile.getAttribute("active") == "true"){
+      comptile.style.backgroundColor = "aqua";
+    }
+  });
+
+  comptile.addEventListener("click", ()=>{
+    let x = parseInt(comptile.getAttribute("x"));
+    let y = parseInt(comptile.getAttribute("y"));
+    let colorIndex = computerBoard.board[y][x];
+    let currColor = colors[colorIndex];
+    if(colorIndex == 0){
+      comptile.style.backgroundColor = "black";
+      computerBoard.board[y][x] = 3;
+      comptile.setAttribute("active", "false") ;
+    } else if (colorIndex == 1){
+      comptile.style.backgroundColor = "orange";
+      computerBoard.board[y][x] = 2;
+      comptile.setAttribute("active", "false");
+    };
+
   });
 });
