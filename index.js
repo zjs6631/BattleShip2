@@ -3,7 +3,6 @@ import { Gameboard as gameboardFactory } from "./Gameboard.js";
 import { player as playerFactory } from "./Player.js";
 import { computerAttack, placeShip } from "./computerPlays.js";
 
-
 let player = playerFactory();
 let computer = playerFactory();
 
@@ -41,7 +40,6 @@ for (let i = 0; i < computerBoard.board.length; i++) {
 
 console.log(computer.playerShips.length);
 for (let i = 0; i < computer.playerShips.length; i++) {
- 
   placeShip(computerBoard, computer, i);
   console.log(computer.playerShips[i].shipCoords);
 }
@@ -332,7 +330,6 @@ tiles.forEach((tile) => {
       console.log(player.playerShips[currShipIndex].shipCoords);
       currShipIndex += 1;
       console.log(playerBoard.board);
-      
     } else if (
       tile.style.backgroundColor == "yellow" &&
       !currAxis &&
@@ -368,82 +365,88 @@ tiles.forEach((tile) => {
 
 let comptiles = document.querySelectorAll(".comptile");
 
-comptiles.forEach((comptile)=>{
-  comptile.addEventListener("mouseenter", ()=>{
-      let x = parseInt(comptile.getAttribute("x"));
-      let y = parseInt(comptile.getAttribute("y"));
-      let colorIndex = computerBoard.board[y][x];
-      let currColor = colors[colorIndex];
-      if((currColor == "aqua" || currColor == "gray") && comptile.getAttribute("active") == "true"){
-        comptile.style.backgroundColor = "green";
-      } else {
-        comptile.style.backgroundColor = "red";
-      };
-  });
-
-  comptile.addEventListener("mouseleave", ()=>{
+comptiles.forEach((comptile) => {
+  comptile.addEventListener("mouseenter", () => {
     let x = parseInt(comptile.getAttribute("x"));
     let y = parseInt(comptile.getAttribute("y"));
     let colorIndex = computerBoard.board[y][x];
     let currColor = colors[colorIndex];
-    if((colorIndex == 0 || colorIndex == 2 || colorIndex == 3)){
+    if (
+      (currColor == "aqua" || currColor == "gray") &&
+      comptile.getAttribute("active") == "true"
+    ) {
+      comptile.style.backgroundColor = "green";
+    } else {
+      comptile.style.backgroundColor = "red";
+    }
+  });
+
+  comptile.addEventListener("mouseleave", () => {
+    let x = parseInt(comptile.getAttribute("x"));
+    let y = parseInt(comptile.getAttribute("y"));
+    let colorIndex = computerBoard.board[y][x];
+    let currColor = colors[colorIndex];
+    if (colorIndex == 0 || colorIndex == 2 || colorIndex == 3) {
       comptile.style.backgroundColor = currColor;
-    } else if (colorIndex == 1 && comptile.getAttribute("active") == "true"){
+    } else if (colorIndex == 1 && comptile.getAttribute("active") == "true") {
       comptile.style.backgroundColor = "aqua";
     }
   });
 
-  comptile.addEventListener("click", ()=>{
-    let x = parseInt(comptile.getAttribute("x"));
-    let y = parseInt(comptile.getAttribute("y"));
-    let colorIndex = computerBoard.board[y][x];
-    let currColor = colors[colorIndex];
-    if(colorIndex == 0){
-      comptile.style.backgroundColor = "black";
-      computerBoard.board[y][x] = 3;
-      comptile.setAttribute("active", "false") ;
-    } else if (colorIndex == 1){
-      comptile.style.backgroundColor = "orange";
-      computerBoard.board[y][x] = 2;
-      let coords = [y,x];
-      comptile.setAttribute("active", "false");
-      for(let i = 0; i < computer.playerShips.length; i++){
-        for(let j = 0; j < computer.playerShips[i].shipCoords.length; j++){
-          let match = true;
-          for(let k = 0; k < coords.length; k++){
-            if(computer.playerShips[i].shipCoords[j][k] != coords[k]){
-              match = false;
+  comptile.addEventListener("click", () => {
+    if (comptile.getAttribute("active") == "true") {
+      let x = parseInt(comptile.getAttribute("x"));
+      let y = parseInt(comptile.getAttribute("y"));
+      let colorIndex = computerBoard.board[y][x];
+      let currColor = colors[colorIndex];
+      if (colorIndex == 0) {
+        comptile.style.backgroundColor = "black";
+        computerBoard.board[y][x] = 3;
+        console.log(computerBoard.board);
+        console.log(comptile.getAttribute("active"));
+        comptile.setAttribute("active", "false");
+      } else if (colorIndex == 1) {
+        comptile.style.backgroundColor = "orange";
+        computerBoard.board[y][x] = 2;
+        let coords = [y, x];
+        comptile.setAttribute("active", "false");
+        for (let i = 0; i < computer.playerShips.length; i++) {
+          for (let j = 0; j < computer.playerShips[i].shipCoords.length; j++) {
+            let match = true;
+            for (let k = 0; k < coords.length; k++) {
+              if (computer.playerShips[i].shipCoords[j][k] != coords[k]) {
+                match = false;
+              }
             }
-          }
-          if(match == true){
-            let ship = computer.playerShips[i];
-            ship.isHit();
-            console.log("you hit a ship!")
-            console.log(ship.hits);
-            //computer.playerShips[i].shipCoords.splice(computer.playerShips[i].shipCoords[j], 1);
-            if(computer.playerShips[i].isSunk()){
-              computerBoard.reduceShips();
-              console.log("You sunk a ship!");
-              if(!computerBoard.checkShips()){
-                console.log("You won!");
+            if (match == true) {
+              let ship = computer.playerShips[i];
+              ship.isHit();
+              console.log("you hit a ship!");
+              console.log(ship.hits);
+              //computer.playerShips[i].shipCoords.splice(computer.playerShips[i].shipCoords[j], 1);
+              if (computer.playerShips[i].isSunk()) {
+                computerBoard.reduceShips();
+                console.log("You sunk a ship!");
+                if (!computerBoard.checkShips()) {
+                  console.log("You won!");
+                }
               }
             }
           }
         }
       }
-    };
-
-    let compAttack = computerAttack(playerBoard);
-    playerBoard.receiveAttack(compAttack);
-    console.log(playerBoard.misses);
-    updateBoard(compAttack);
-    console.log(playerBoard.board);
-
-
+      if (computerBoard.checkShips()) {
+        let compAttack = computerAttack(playerBoard);
+        playerBoard.receiveAttack(compAttack);
+        console.log(playerBoard.misses);
+        updateBoard(compAttack);
+        console.log(playerBoard.board);
+      }
+    }
   });
 });
 
-function updateBoard (arr){
+function updateBoard(arr) {
   //let tiles = document.querySelectorAll('.tile');
 
   tiles.forEach((tile) => {
@@ -452,42 +455,40 @@ function updateBoard (arr){
     let x = arr[0];
     let y = arr[1];
 
-    if(arr[0] == targx && arr[1] == targy){
+    if (arr[0] == targx && arr[1] == targy) {
       let colorIndex = playerBoard.board[y][x];
-      if(colorIndex == 0){
+      if (colorIndex == 0) {
         tile.style.backgroundColor = "aqua";
-      } else if (colorIndex == 1){
+      } else if (colorIndex == 1) {
         tile.style.backgroundColor = "gray";
-      } else if (colorIndex == 2){
+      } else if (colorIndex == 2) {
         tile.style.backgroundColor = "orange";
-        for(let i = 0; i < player.playerShips.length; i++){
+        for (let i = 0; i < player.playerShips.length; i++) {
           let coords = [targy, targx];
-          for(let j = 0; j < player.playerShips[i].shipCoords.length; j++){
+          for (let j = 0; j < player.playerShips[i].shipCoords.length; j++) {
             let match = true;
-            for(let k = 0; k < coords.length; k++){
-              if(coords[k] != player.playerShips[i].shipCoords[j][k]){
+            for (let k = 0; k < coords.length; k++) {
+              if (coords[k] != player.playerShips[i].shipCoords[j][k]) {
                 match = false;
               }
             }
-            if(match == true){
+            if (match == true) {
               player.playerShips[i].isHit();
               console.log("They hit a shiP!");
               //player.playerShips[i].shipCoords.splice(player.playerShips[i].shipCoords[j], 1);
-              if(player.playerShips[i].isSunk()){
+              if (player.playerShips[i].isSunk()) {
                 console.log("They sunk a ship!");
                 playerBoard.reduceShips();
-                if(!playerBoard.checkShips()){
+                if (!playerBoard.checkShips()) {
                   console.log("you lose!");
                 }
               }
             }
           }
         }
-
-      } else if (colorIndex == 3){
+      } else if (colorIndex == 3) {
         tile.style.backgroundColor = "black";
       }
-    };
-
+    }
   });
 }
