@@ -12,6 +12,8 @@ let computerBoard = gameboardFactory();
 let visualPboard = document.getElementById("playerBoard");
 let visualCboard = document.getElementById("computerBoard");
 
+let currActionText = document.getElementById("currAction");
+
 let colors = ["aqua", "gray", "orange", "black"];
 // nested loop to create a 10x10 grid and assign x/y variable values to each tile to use for game logic
 //implementation
@@ -38,13 +40,13 @@ for (let i = 0; i < computerBoard.board.length; i++) {
   }
 }
 
-console.log(computer.playerShips.length);
+
 for (let i = 0; i < computer.playerShips.length; i++) {
   placeShip(computerBoard, computer, i);
-  console.log(computer.playerShips[i].shipCoords);
 }
 
-console.log(computerBoard.board);
+
+
 
 //boards created. Now we will handle placing the boats on the board.
 
@@ -327,9 +329,9 @@ tiles.forEach((tile) => {
 
         tile = tile.nextSibling; //using nextSibling is similar to node traversals
       }
-      console.log(player.playerShips[currShipIndex].shipCoords);
+      
       currShipIndex += 1;
-      console.log(playerBoard.board);
+      
     } else if (
       tile.style.backgroundColor == "yellow" &&
       !currAxis &&
@@ -356,11 +358,16 @@ tiles.forEach((tile) => {
           currTile.setAttribute("isActive", "false");
         }
       });
-      console.log(player.playerShips[currShipIndex].shipCoords);
+      
       currShipIndex += 1;
-      console.log(playerBoard.board);
+      
     }
+    if(currShipIndex == 4){
+      currActionText.innerHTML = "Your ships have been placed! ATTACK!";
+    }
+    
   });
+  
 });
 
 let comptiles = document.querySelectorAll(".comptile");
@@ -405,11 +412,15 @@ comptiles.forEach((comptile) => {
         console.log(computerBoard.board);
         console.log(comptile.getAttribute("active"));
         comptile.setAttribute("active", "false");
+        
+        currActionText.innerHTML = "You missed. ";
+        
       } else if (colorIndex == 1) {
         comptile.style.backgroundColor = "orange";
         computerBoard.board[y][x] = 2;
         let coords = [y, x];
         comptile.setAttribute("active", "false");
+        currActionText.innerHTML = "You hit the enemy ship. ";
         for (let i = 0; i < computer.playerShips.length; i++) {
           for (let j = 0; j < computer.playerShips[i].shipCoords.length; j++) {
             let match = true;
@@ -421,14 +432,14 @@ comptiles.forEach((comptile) => {
             if (match == true) {
               let ship = computer.playerShips[i];
               ship.isHit();
-              console.log("you hit a ship!");
-              console.log(ship.hits);
+              
               //computer.playerShips[i].shipCoords.splice(computer.playerShips[i].shipCoords[j], 1);
               if (computer.playerShips[i].isSunk()) {
                 computerBoard.reduceShips();
-                console.log("You sunk a ship!");
+                currActionText.innerHTML += "The enemy ship has sunk.";
+                
                 if (!computerBoard.checkShips()) {
-                  console.log("You won!");
+                  currActionText.innerHTML += " YOU WON THE GAME!";
                 }
               }
             }
@@ -438,9 +449,9 @@ comptiles.forEach((comptile) => {
       if (computerBoard.checkShips()) {
         let compAttack = computerAttack(playerBoard);
         playerBoard.receiveAttack(compAttack);
-        console.log(playerBoard.misses);
+        
         updateBoard(compAttack);
-        console.log(playerBoard.board);
+        
       }
     }
   });
@@ -474,13 +485,13 @@ function updateBoard(arr) {
             }
             if (match == true) {
               player.playerShips[i].isHit();
-              console.log("They hit a shiP!");
+              currActionText.innerHTML += " The enemy has hit one of your ships!";
               //player.playerShips[i].shipCoords.splice(player.playerShips[i].shipCoords[j], 1);
               if (player.playerShips[i].isSunk()) {
-                console.log("They sunk a ship!");
+                currActionText.innerHTML += " One of your ships sunk.";
                 playerBoard.reduceShips();
                 if (!playerBoard.checkShips()) {
-                  console.log("you lose!");
+                  currActionText.innerHTML = " YOU LOSE!";
                 }
               }
             }
