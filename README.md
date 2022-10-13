@@ -46,3 +46,6 @@ This will cause more issue with making sure players place ships in valid positio
 once I get the ships placed on the board I will start figuring out how to let the computer place ships on the board randomly. Maybe get a random number (0-1) to determine axis and then a random number (0-9) to choose tile to place ship. Repeat this process until 5 ships are places. 
 
 
+
+
+

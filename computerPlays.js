@@ -102,31 +102,16 @@ export function computerAttack (Gameboard) {
   
   let coords = [targX, targY];
   
-  let missmatch = false;
-  let hitmatch = false;
-  for(let i = 0; i < Gameboard.misses.length; i++){
-    
-    for(let j = 0; j < Gameboard.misses[i].length; j++){
-      if(Gameboard.misses[i][j] != coords[j]){
-        break;
-      }
+  let match = false;
+  for(let i = 0; i < Gameboard.shots.length; i++){
+    if(Gameboard.shots[i][1] == coords[0] && Gameboard.shots[i][0] == coords[1]){
+      match = true;
     }
-    
-  
   }
   
-  for(let i = 0; i < Gameboard.hits.length; i++){
-    
-    for(let j = 0; j < Gameboard.hits[i].length; j++){
-      if(Gameboard.hits[i][j] != coords[j]){
-        match = false;
-      }
-    }
-    
-  }
 
   if(match){
-    computerAttack(Gameboard);
+    coords = computerAttack(Gameboard);
   }
 
   return coords;

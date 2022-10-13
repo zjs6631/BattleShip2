@@ -52,6 +52,36 @@ test("returns an array length 2", () =>{
     expect(ourArray.length).toBe(2);
 });
 
+test("computerAttack finds match", ()=>{
+    let testBoard = gameboardFactory();
+    testBoard.receiveAttack([2,1]);
+    expect(mockComputerAttack(testBoard)).toBe(true);
+
+
+});
+
+function mockComputerAttack (Gameboard) {
+    let targX = 2;
+    let targY = 1;
+    
+    let coords = [targX, targY];
+    
+    let match = false;
+    for(let i = 0; i < Gameboard.shots.length; i++){
+      if(Gameboard.shots[i][1] == coords[0] && Gameboard.shots[i][0] == coords[1]){
+        match = true;
+      }
+    }
+    
+  
+    if(match){
+      return true;
+    }
+  
+    return false;
+    
+  };
+
 
 
 
