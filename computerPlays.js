@@ -39,6 +39,8 @@ export function placeShip(Gameboard, compPlayer, incIndex) {
         i < compPlayer.playerShips[currIndex].length + headY;
         i++
       ) {
+        let coords = [headY, i];
+        compPlayer.playerShips[currIndex].shipCoords.push(coords);
         Gameboard.board[headY][i] = 1;
         console.log("X move played" + "X = " + headY + " Y = " + i);
       }
@@ -80,6 +82,8 @@ export function placeShip(Gameboard, compPlayer, incIndex) {
         i < compPlayer.playerShips[currIndex].length + headY;
         i++
       ) {
+        let coords = [i, headX];
+        compPlayer.playerShips[currIndex].shipCoords.push(coords);
         Gameboard.board[i][headX] = 1;
         console.log("Y move played. X= " + i + " Y= " + headX);
       }
@@ -91,3 +95,40 @@ export function placeShip(Gameboard, compPlayer, incIndex) {
   }
   return;
 }
+
+export function computerAttack (Gameboard) {
+  let targX = Math.floor(Math.random() * 10);
+  let targY = Math.floor(Math.random() * 10);
+  
+  let coords = [targX, targY];
+  
+  let missmatch = false;
+  let hitmatch = false;
+  for(let i = 0; i < Gameboard.misses.length; i++){
+    
+    for(let j = 0; j < Gameboard.misses[i].length; j++){
+      if(Gameboard.misses[i][j] != coords[j]){
+        break;
+      }
+    }
+    
+  
+  }
+  
+  for(let i = 0; i < Gameboard.hits.length; i++){
+    
+    for(let j = 0; j < Gameboard.hits[i].length; j++){
+      if(Gameboard.hits[i][j] != coords[j]){
+        match = false;
+      }
+    }
+    
+  }
+
+  if(match){
+    computerAttack(Gameboard);
+  }
+
+  return coords;
+  
+};

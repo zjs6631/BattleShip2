@@ -1,7 +1,8 @@
 import {ship as shipFactory} from "./Ship.js";
-import { Gameboard as gameboardFactory } from "./Gameboard.js";
+import { Gameboard, Gameboard as gameboardFactory } from "./Gameboard.js";
 import {player as playerFactory} from "./Player.js";
 import {placeShip} from "./computerPlays";
+import {computerAttack} from"./computerPlays";
 
 
 test("ship is not sunk", () => {
@@ -26,21 +27,33 @@ test("ship is sunk", () =>{
 test("hit recorded on board", () =>{
     let newBoard = gameboardFactory();
     newBoard.board[0][0] = 1; //1 == ship
-    newBoard.receiveAttack(0, 0); //attack the ship
-    expect(newBoard.board[0][0]).toBe(3); //check if it was set to 3 (ship hit)
+    let arr = [0,0];
+    newBoard.receiveAttack(arr); //attack the ship
+    expect(newBoard.board[0][0]).toBe(2); //check if it was set to 3 (ship hit)
 });
 
 test("invalid hits recognized", () =>{
     let newBoard = gameboardFactory();
     newBoard.board[0][0] = 1;
-    newBoard.receiveAttack(0, 0);
-    expect(newBoard.receiveAttack(0,0)).toBe(false); //calls the same hit twice
+    let arr = [0, 0];
+    newBoard.receiveAttack(arr);
+    
+    expect(newBoard.receiveAttack(arr)).toBe(false); //calls the same hit twice
 })
 
 test("player created with 4 ships", () => {
     let newPlayer = playerFactory();
     expect(newPlayer.playerShips.length).toBe(4);
 });
+
+test("returns an array length 2", () =>{
+    let testBoard = Gameboard();
+    let ourArray = computerAttack(testBoard);
+    expect(ourArray.length).toBe(2);
+});
+
+
+
 
 
 

@@ -2,24 +2,24 @@
 
 export const ship = (length, sunk) => {
     let hits = 0
-    let xAxis = true;
-    const isSunk = () => {
+    
+    let shipCoords = [];
+    let isSunk = () => {
         if(length == hits){
-            sunk = true;
             return true;
         } else {
             return false;
         }
     }
 
-    const isHit = () => {
+    let isHit = () => {
         hits +=1;
         return hits;
     }
 
     
 
-    return { length, sunk, isSunk, isHit, hits};
+    return { length, sunk, isSunk, isHit, hits, shipCoords};
 };
 
 

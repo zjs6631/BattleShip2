@@ -1,7 +1,7 @@
 import { ship as shipFactory } from "./Ship.js";
 import { Gameboard as gameboardFactory } from "./Gameboard.js";
 import { player as playerFactory } from "./Player.js";
-import { placeShip } from "./computerPlays.js";
+import { computerAttack, placeShip } from "./computerPlays.js";
 
 
 let player = playerFactory();
@@ -41,8 +41,9 @@ for (let i = 0; i < computerBoard.board.length; i++) {
 
 console.log(computer.playerShips.length);
 for (let i = 0; i < computer.playerShips.length; i++) {
-  console.log("loop--->" + i);
+ 
   placeShip(computerBoard, computer, i);
+  console.log(computer.playerShips[i].shipCoords);
 }
 
 console.log(computerBoard.board);
@@ -313,6 +314,8 @@ tiles.forEach((tile) => {
       let firstTilesX = parseInt(tile.getAttribute("x"));
       let firstTilesY = parseInt(tile.getAttribute("y"));
       playerBoard.board[firstTilesY][firstTilesX] = 1;
+      let shipTileCoords = [firstTilesY, firstTilesX];
+      player.playerShips[currShipIndex].shipCoords.push(shipTileCoords);
 
       //loop through for the length of the boat and make squares yellow
       for (let i = 1; i < currShipToPlace.length; i++) {
@@ -321,10 +324,15 @@ tiles.forEach((tile) => {
         playerBoard.board[nextY][nextX] = 1;
         tile.nextSibling.style.backgroundColor = "gray";
         tile.nextSibling.setAttribute("isActive", "false");
+        let nextSiblingsCoords = [nextY, nextX];
+        player.playerShips[currShipIndex].shipCoords.push(nextSiblingsCoords);
+
         tile = tile.nextSibling; //using nextSibling is similar to node traversals
       }
+      console.log(player.playerShips[currShipIndex].shipCoords);
       currShipIndex += 1;
       console.log(playerBoard.board);
+      
     } else if (
       tile.style.backgroundColor == "yellow" &&
       !currAxis &&
@@ -344,11 +352,14 @@ tiles.forEach((tile) => {
         ) {
           let currX = parseInt(currTile.getAttribute("x"));
           let currY = parseInt(currTile.getAttribute("y"));
+          let currCoords = [currY, currX];
+          player.playerShips[currShipIndex].shipCoords.push(currCoords);
           playerBoard.board[currY][currX] = 1;
           currTile.style.backgroundColor = "gray";
           currTile.setAttribute("isActive", "false");
         }
       });
+      console.log(player.playerShips[currShipIndex].shipCoords);
       currShipIndex += 1;
       console.log(playerBoard.board);
     }
@@ -394,8 +405,89 @@ comptiles.forEach((comptile)=>{
     } else if (colorIndex == 1){
       comptile.style.backgroundColor = "orange";
       computerBoard.board[y][x] = 2;
+      let coords = [y,x];
       comptile.setAttribute("active", "false");
+      for(let i = 0; i < computer.playerShips.length; i++){
+        for(let j = 0; j < computer.playerShips[i].shipCoords.length; j++){
+          let match = true;
+          for(let k = 0; k < coords.length; k++){
+            if(computer.playerShips[i].shipCoords[j][k] != coords[k]){
+              match = false;
+            }
+          }
+          if(match == true){
+            let ship = computer.playerShips[i];
+            ship.isHit();
+            console.log("you hit a ship!")
+            console.log(ship.hits);
+            //computer.playerShips[i].shipCoords.splice(computer.playerShips[i].shipCoords[j], 1);
+            if(computer.playerShips[i].isSunk()){
+              computerBoard.reduceShips();
+              console.log("You sunk a ship!");
+              if(!computerBoard.checkShips()){
+                console.log("You won!");
+              }
+            }
+          }
+        }
+      }
     };
+
+    let compAttack = computerAttack(playerBoard);
+    playerBoard.receiveAttack(compAttack);
+    console.log(playerBoard.misses);
+    updateBoard(compAttack);
+    console.log(playerBoard.board);
+
 
   });
 });
+
+function updateBoard (arr){
+  //let tiles = document.querySelectorAll('.tile');
+
+  tiles.forEach((tile) => {
+    let targx = parseInt(tile.getAttribute("x"));
+    let targy = parseInt(tile.getAttribute("y"));
+    let x = arr[0];
+    let y = arr[1];
+
+    if(arr[0] == targx && arr[1] == targy){
+      let colorIndex = playerBoard.board[y][x];
+      if(colorIndex == 0){
+        tile.style.backgroundColor = "aqua";
+      } else if (colorIndex == 1){
+        tile.style.backgroundColor = "gray";
+      } else if (colorIndex == 2){
+        tile.style.backgroundColor = "orange";
+        for(let i = 0; i < player.playerShips.length; i++){
+          let coords = [targy, targx];
+          for(let j = 0; j < player.playerShips[i].shipCoords.length; j++){
+            let match = true;
+            for(let k = 0; k < coords.length; k++){
+              if(coords[k] != player.playerShips[i].shipCoords[j][k]){
+                match = false;
+              }
+            }
+            if(match == true){
+              player.playerShips[i].isHit();
+              console.log("They hit a shiP!");
+              //player.playerShips[i].shipCoords.splice(player.playerShips[i].shipCoords[j], 1);
+              if(player.playerShips[i].isSunk()){
+                console.log("They sunk a ship!");
+                playerBoard.reduceShips();
+                if(!playerBoard.checkShips()){
+                  console.log("you lose!");
+                }
+              }
+            }
+          }
+        }
+
+      } else if (colorIndex == 3){
+        tile.style.backgroundColor = "black";
+      }
+    };
+
+  });
+}

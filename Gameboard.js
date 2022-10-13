@@ -16,15 +16,21 @@ export const Gameboard = () => {
                  [0,0,0,0,0,0,0,0,0,0]];
 
     let misses = [];
-    const receiveAttack = (x, y) => { 
+    let hits = [];
+    const receiveAttack = (arr) => { 
+        let x = parseInt(arr[1]);
+        let y = parseInt(arr[0]);
+
         let validMove = true;
         if(board[x][y] == 0){
-            board[x][y] = 2;
+            board[x][y] = 3;
             let miss = [x, y];
             misses.push(miss);
-            valueMove = true;
+            validMove = true;
         } else if (board[x][y] == 1){
-            board[x][y] = 3;
+            board[x][y] = 2;
+            let hit = [x, y];
+            hits.push(hit);
             validMove = true;
         } else {
             validMove = false;
@@ -40,7 +46,11 @@ export const Gameboard = () => {
         }
     }
 
-    return{ shipCount, board, misses, receiveAttack, checkShips};
+    const reduceShips = () =>{
+        shipCount-=1;
+    }
+
+    return{ shipCount, board, misses, hits, receiveAttack, checkShips, reduceShips};
 };
 
 //if(module.exports){
